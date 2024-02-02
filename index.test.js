@@ -33,4 +33,28 @@ describe('Endpoints', () => {
             expect(response.body[0]).toEqual(expect.objectContaining(dogs[0]));
         });
     });
+
+    describe('POST /dogs', () => {
+        it('should post new dog', async ()=> {
+            const response = await request(app)
+            .post('/dogs')
+            .send(testDogData);
+            expect(response.statusCode).toBe(200);
+            const newDog = await Dog.findOne({
+                where: {name:testDogData.name}
+            });
+            expect(newDog).toEqual(expect.objectContaining(testDogData));
+        });
+    });
+
+    describe('DELETE /dogs/:id', () => {
+        it('should post new dog', async ()=> {
+            const id = 1;
+            const response = await request(app)
+            .delete(`/dogs/${id}`)
+            expect(response.statusCode).toBe(200);
+            const removeDog = await Dog.findAll({where: {id:id}});
+            expect(removeDog).toBeNull;
+        });
+    });
 });
